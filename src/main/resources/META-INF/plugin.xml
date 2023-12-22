@@ -1,0 +1,45 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>ind.arming.go-struct-to-json</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Go-struct-to-json</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="arming.lou@foxmail.com" url="https://github.com/ArmingLou">Arming</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    <p>Convert  Go Struct to JSON.</p>
+        <p>&nbsp;</p>
+        <h2>Usage</h2>
+    <p>Select  Go Struct then right click and select "Convert GO Struct To JSON "</p>
+    <br/>
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <dependencies>
+        <plugin id="org.jetbrains.plugins.go"/>
+        <plugin id="com.intellij.modules.goland"/>
+    </dependencies>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup displayType="BALLOON" id="GoStruct2Json.NotificationGroup" key="ind.arming.GoStruct2Json.NotificationGroup"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="ind.arming.gostructtojson.GoStruct2JsonAction" class="ind.arming.gostructtojson.GoStruct2JsonAction" text="Convert Struct to JSON" description="Convert Struct to JSON">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
