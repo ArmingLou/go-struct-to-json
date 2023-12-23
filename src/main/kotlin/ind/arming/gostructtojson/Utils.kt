@@ -10,7 +10,6 @@ import java.util.regex.Pattern
 
 object Utils {
     private val basicTypes: MutableMap<String, Any> = HashMap()
-    private const val STRUCT_TYPE = "STRUCT_TYPE"
 
     init {
         basicTypes["bool"] = false
@@ -54,21 +53,25 @@ object Utils {
     //   Field int `json:"-"`    --> Field is ignored by this package.
     //   Field int `json:"-,"`   --> Field appears in JSON as key "-".
      */
-    private fun getJsonKeyName(fieldName: String, tagText: String?): String {
-        var jsonKey = fieldName
+    private fun getJsonKeyName(fieldName: String, tagText: String?): String? {
         if (tagText == null || tagText == "") {
-            return jsonKey
+            return fieldName
         }
         val regPattern = "[json|redis]:\"([\\w\\d_,-\\.]+)\""
         val pattern = Pattern.compile(regPattern)
         val matcher = pattern.matcher(tagText)
         if (matcher.find()) {
-            val tmpKeyName = matcher.group(1).split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-            if (tmpKeyName != "-") { // for now,don't omit any field
-                jsonKey = tmpKeyName
+            val matchStr = matcher.group(1)
+            if(matchStr == "-"){
+                return null
+            } else if (matchStr.startsWith("-,")){
+                return "-"
+            } else {
+                val tmpKeyName = matchStr.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+                return tmpKeyName
             }
         }
-        return jsonKey
+        return fieldName
     }
 
     /**
@@ -114,11 +117,13 @@ object Utils {
                 }
             } else {
                 val fieldName = field.fieldDefinitionList[0].identifier.text
-                val fieldTagText = field.tagText
-
-                val jsonKey = getJsonKeyName(fieldName, fieldTagText)
-
-                map[jsonKey] = getCustomType(fieldType)
+                if (fieldName[0].isUpperCase()) {
+                    val fieldTagText = field.tagText
+                    val jsonKey = getJsonKeyName(fieldName, fieldTagText)
+                    if (jsonKey != null) {
+                        map[jsonKey] = getCustomType(fieldType)
+                    }
+                }
             }
         }
         return map
@@ -164,6 +169,8 @@ object Utils {
                 return tt?.let { getCustomType(it) }
             } else if (fieldType is GoInterfaceType) {
                 return HashMap<Any, Any>()
+            } else if (fieldType is GoChannelType || fieldType is GoFunctionType || fieldType is GoCompositeType || fieldType is GoTypeSpec) {
+                return null
             } else {
                 val underType = fieldType.contextlessUnderlyingType
                 return getCustomType(underType)
