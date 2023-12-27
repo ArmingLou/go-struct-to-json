@@ -14,12 +14,18 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    <p>Convert  Go Struct to JSON.</p>
-        <p>&nbsp;</p>
+    <p>Convert Go Struct to JSON.</p>
+    <li>Support custom type fields</li>
+    <li>Behavior similar to "json.Marshal"</li>
+    <li>Custom MarshalJSON() method is not supported</li>
         <h2>Usage</h2>
-    <p>Select  Go Struct then right click and select "Convert GO Struct To JSON "</p>
+    <p>Select Go Struct --> Right click --> "Convert GO Struct To JSON "</p>
     <br/>
   ]]></description>
+    <change-notes><![CDATA[
+         <li>2.0.1 - Support custom type fields.</li>
+    ]]>
+    </change-notes>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
